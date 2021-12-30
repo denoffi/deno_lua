@@ -31,5 +31,5 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         run: |
           sudo apt update -y
-          sudo apt-get install -y lua
+          sudo apt-get install -y lua5.3
           deno test --unstable --allow-ffi
