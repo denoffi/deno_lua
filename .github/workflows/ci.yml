@@ -1,0 +1,35 @@
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  check:
+    name: check ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macOS-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+
+      - name: Format
+        run: deno fmt --check
+
+      - name: Lint
+        run: deno lint --unstable
+
+      - name: Tests (macOS)
+        if: startsWith(matrix.os, 'macOS')
+        run: |
+          brew install lua
+          deno test --unstable --allow-ffi
+
+      - name: Tests (ubuntu)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt update -y
+          sudo apt-get install -y lua
+          deno test --unstable --allow-ffi
