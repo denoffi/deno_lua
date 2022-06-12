@@ -1,6 +1,10 @@
 import { cstr2ptr } from "https://deno.land/x/ffi/mod.ts";
 
-const libName = Deno.build.os === "linux" ? "liblua.so" : "liblua.dylib";
+const libName = {
+  darwin: "liblua.dylib",
+  linux: "liblua.so",
+  windows: "lua51.dll",
+}[Deno.build.os];
 
 const lib = Deno.dlopen(libName, {
   // lua_State *luaL_newstate (void);
